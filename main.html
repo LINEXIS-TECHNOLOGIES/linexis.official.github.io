@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINEXIS TECHNOLOGIES — The Axis of Innovation</title>
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 30%, #101010 0%, #030303 100%);
+            --gold: #d4af37;
+            --gold-glow: rgba(212, 175, 55, 0.25);
+            /* Жидкое стекло */
+            --liquid-glass: rgba(255, 255, 255, 0.02);
+            --liquid-border: rgba(255, 255, 255, 0.07);
+            --liquid-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.12);
+            
+            --text-main: #ffffff;
+            --text-muted: #808080;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+            opacity: 0;
+            animation: fadeInPage 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        /* Эффект дорогих золотых блёсток/пыли на фоне */
+        .gold-dust {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(rgba(212, 175, 55, 0.18) 1px, transparent 0),
+                radial-gradient(rgba(212, 175, 55, 0.12) 1.2px, transparent 0),
+                radial-gradient(rgba(212, 175, 55, 0.08) 1.5px, transparent 0),
+                radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
+            /* Уменьшенные размеры сетки делают блёстки гораздо плотнее и чаще */
+            background-size: 60px 60px, 85px 85px, 130px 130px, 70px 70px;
+            /* Смещения для хаотичного распределения точек */
+            background-position: 0 0, 15px 30px, 45px 70px, 25px 10px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.95; /* Почти полная видимость */
+        }
+
+        .ambient-glow {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 950px;
+            height: 950px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.04) 0%, rgba(0,0,0,0) 65%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* --- ШАПКА (HEADER) --- */
+        header {
+            width: 100%;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Идеальный бутерброд с одинаковой толщиной линий */
+        .menu-burger {
+            width: 22px;
+            height: 13px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .menu-burger span {
+            display: block;
+            width: 100%;
+            height: 1.5px; /* Толщина строго зафиксирована */
+            background-color: rgba(255, 255, 255, 0.85);
+            transition: all 0.3s ease;
+        }
+
+        .menu-burger:hover span {
+            background-color: var(--gold);
+        }
+
+        .soon-indicator {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            letter-spacing: 5px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 300;
+            opacity: 0.6;
+        }
+
+        .header-logo {
+            height: 38px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.15));
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .header-logo:active {
+            transform: scale(0.92);
+        }
+
+        /* --- ШТОРКА iOS 26 (ЖИДКОЕ СТЕКЛО) --- */
+        .sidebar {
+            position: fixed;
+            top: 10px;
+            bottom: 10px;
+            left: -320px; /* Спрятана так, чтобы корректно выезжать с учетом теней */
+            width: calc(100vw / 6);
+            min-width: 240px;
+            background: rgba(25px, 25px, 25px, 0.3);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 
+                        inset 0 1px 2px rgba(255, 255, 255, 0.15);
+            border-radius: 0 24px 24px 0;
+            z-index: 100;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            /* Плавное скольжение в обе стороны */
+            transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .close-btn {
+            align-self: flex-end;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+            margin-bottom: 40px;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--gold);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .sidebar-link {
+            color: rgba(255, 255, 255, 0.65);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .sidebar-link:hover {
+            color: var(--text-main);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+            transform: translateX(4px);
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(1px);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 99;
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- ЦЕНТРАЛЬНЫЙ КОНТЕНТ --- */
+        .main-content {
+            flex: 1;
+            width: 100%;
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 20px 24px 60px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .hero-logo {
+            width: 140px;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.2));
+        }
+
+        .brand-name {
+            font-size: 2.8rem;
+            font-weight: 400;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .brand-slogan {
+            font-size: 1rem;
+            color: var(--gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        /* Ячейки Жидкого Стекла */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        .glass-cell {
+            background: var(--liquid-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--liquid-border);
+            box-shadow: var(--liquid-highlight), 0 20px 45px rgba(0, 0, 0, 0.35);
+            border-radius: 20px;
+            padding: 40px 35px;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .glass-cell:hover {
+            border-color: rgba(212, 175, 55, 0.25);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-2px);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.22), 
+                        0 25px 50px rgba(0, 0, 0, 0.55), 
+                        0 0 15px rgba(212, 175, 55, 0.02);
+        }
+
+        .cell-title {
+            font-size: 1.15rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            color: #f5f5f5;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 10px;
+        }
+
+        .cell-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        /* Панель Пасхалки */
+        .easter-egg-notification {
+            position: fixed;
+            top: 30px;
+            right: -400px;
+            background: rgba(15, 15, 15, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 15px 40px rgba(0,0,0,0.6);
+            padding: 15px 25px;
+            border-radius: 12px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .easter-egg-notification.show {
+            right: 30px;
+            opacity: 1;
+        }
+
+        .easter-egg-text {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+        }
+
+        /* --- ФУТЕР --- */
+        footer {
+            width: 100%;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Адаптив */
+        @media (max-width: 1024px) {
+            .sidebar { width: 280px; border-radius: 0 20px 20px 0; left: -360px; }
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 20px; }
+            .soon-indicator { font-size: 0.65rem; letter-spacing: 3px; }
+            .brand-name { font-size: 2rem; letter-spacing: 6px; }
+            .brand-slogan { font-size: 0.85rem; letter-spacing: 2px; }
+            .info-grid { grid-template-columns: 1fr; gap: 20px; }
+            .glass-cell { padding: 30px 25px; }
+            .sidebar { width: 80vw; top: 0; bottom: 0; border-radius: 0; left: -90vw; }
+            .easter-egg-notification.show { right: 10px; left: 10px; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gold-dust"></div>
+    <div class="ambient-glow"></div>
+    
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="easter-egg-notification" id="easterEgg">
+        <span class="easter-egg-text">SHIRO's PRODUCTION</span>
+    </div>
+
+    <nav class="sidebar" id="sidebar">
+        <button class="close-btn" id="closeSidebar">&times;</button>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="sidebar-link" style="color: var(--gold);">Главная</a></li>
+            <li><a href="we.html" class="sidebar-link">О нас</a></li>
+            <li><a href="https://t.me/LINEXIS_TECHNOLOGIES" target="_blank" class="sidebar-link">Telegram</a></li>
+            <li><a href="https://19shiro19.github.io" target="_blank" class="sidebar-link">SHIRO's PRODUCTION</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <button class="menu-burger" id="openSidebar">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        
+        <div class="soon-indicator">soon..</div>
+        
+        <img src="IMG_5425.png" alt="LINEXIS" class="header-logo" id="logoClick">
+    </header>
+
+    <main class="main-content">
+        
+        <section class="hero-section">
+            <img src="icon.png" alt="LINEXIS Large Logo" class="hero-logo">
+            <h1 class="brand-name">LINEXIS</h1>
+            <p class="brand-slogan">The Axis of Innovation</p>
+        </section>
+
+        <section class="info-grid">
+            
+            <div class="glass-cell">
+                <h2 class="cell-title">Hardware & Начинка</h2>
+                <p class="cell-text">Честные разборы, тесты, тонкая настройка и кастомизация устройств. Всё о высокопроизводительных ПК-сборках, оптимизации систем и выжимании абсолютного максимума из платформ.</p>
+            </div>
+
+            <div class="glass-cell">
+                <h2 class="cell-title">Software & IT Ecosystem</h2>
+                <p class="cell-text">Полезный софт, конфигурация цифровых пространств, разбор чистого кода и проектирование собственных кастомных IT-решений для тех, кто ценит производительность.</p>
+            </div>
+
+            <div class="glass-cell">
+                <h2 class="cell-title">Технологии изнутри</h2>
+                <p class="cell-text">Мы смотрим на цифровой мир без маркетинговых обещаний. Первые детальные технические разборы, глубокая аналитика железа и эксклюзивные анонсы экосистемы — уже на подходе.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© All Rights Reserved. LINEXIS TECHNOLOGIES 2026</p>
+    </footer>
+
+    <script>
+        const openBtn = document.getElementById('openSidebar');
+        const closeBtn = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        const logoClick = document.getElementById('logoClick');
+        const easterEgg = document.getElementById('easterEgg');
+
+        function toggleSidebar(open) {
+            if (open) {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+            } else {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        }
+
+        openBtn.addEventListener('click', () => toggleSidebar(true));
+        closeBtn.addEventListener('click', () => toggleSidebar(false));
+        overlay.addEventListener('click', () => toggleSidebar(false));
+
+        let eggTimeout;
+        logoClick.addEventListener('click', () => {
+            clearTimeout(eggTimeout);
+            easterEgg.classList.add('show');
+            eggTimeout = setTimeout(() => {
+                easterEgg.classList.remove('show');
+            }, 2500);
+        });
+    </script>
+
+</body>
+</html>

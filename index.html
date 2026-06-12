@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINEXIS — Welcome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Красивый сложный фон: глубокий графит с переходом в ультра-темный */
+            --bg-gradient: radial-gradient(circle at center, #141414 0%, #080808 100%);
+            --gold: #d4af37;
+            --text-light: #ffffff;
+            --text-muted: #888888;
+            --box-bg: rgba(20, 20, 20, 0.4);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-light);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Объемное золотое свечение на фоне */
+        .bg-glow {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px; /* Увеличили контейнер, чтобы тексту было просторно */
+            padding: 30px;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Увеличенное премиальное окошко (Матовое стекло) */
+        .message-box {
+            background: var(--box-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 60px 80px; /* Существенно увеличили внутренние отступы */
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            min-height: 240px; /* Сделали окошко гораздо выше */
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Общие стили для текста (Увеличены в 2 раза + адаптивность) */
+        .step-text {
+            font-size: calc(2rem + 1.5vw); /* Текст стал огромным, но подстраивается под экран */
+            font-weight: 300;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            position: absolute;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            text-align: center;
+        }
+
+        /* Стилизация этапов */
+        .shiro-title {
+            color: var(--text-light);
+            font-weight: 400;
+            letter-spacing: 8px;
+        }
+
+        .linexis-title {
+            color: var(--gold);
+            font-weight: 400;
+            letter-spacing: 10px;
+        }
+
+        .presents-title {
+            color: var(--text-muted);
+            font-size: calc(1.5rem + 1vw); /* Чуть компактнее, чем названия брендов */
+            letter-spacing: 14px;
+            font-weight: 300;
+        }
+
+        /* Классы анимации */
+        .fade-in {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+            transform: translateY(-20px) !important;
+        }
+
+        /* Эффект глубокого свечения для LINEXIS */
+        .gold-glow {
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.6), 
+                         0 0 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .content-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Адаптация под маленькие мобильные экраны, чтобы текст физически не мог вылезти */
+        @media (max-width: 600px) {
+            .message-box {
+                padding: 40px 20px;
+                min-height: 180px;
+            }
+            .step-text {
+                font-size: 1.5rem; /* Фиксированный безопасный размер для телефонов */
+                letter-spacing: 3px;
+            }
+            .presents-title {
+                font-size: 1.2rem;
+                letter-spacing: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <div class="container">
+        <div class="message-box" id="messageBox">
+            <div class="content-wrapper">
+                
+                <div class="step-text shiro-title" id="stepShiro">
+                    SHIRO's PRODUCTION
+                </div>
+                
+                <div class="step-text linexis-title" id="stepLinexis">
+                    LINEXIS TECHNOLOGIES
+                </div>
+
+                <div class="step-text presents-title" id="stepPresents">
+                    presents
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const messageBox = document.getElementById('messageBox');
+            const shiro = document.getElementById('stepShiro');
+            const linexis = document.getElementById('stepLinexis');
+            const presents = document.getElementById('stepPresents');
+
+            // 1. Появление SHIRO's PRODUCTION
+            setTimeout(() => {
+                shiro.classList.add('fade-in');
+            }, 500);
+
+            // 2. Убираем SHIRO, включаем LINEXIS TECHNOLOGIES
+            setTimeout(() => {
+                shiro.classList.remove('fade-in');
+                shiro.classList.add('fade-out');
+
+                setTimeout(() => {
+                    // Плавно подсвечиваем рамку золотом при появлении дочернего бренда
+                    messageBox.style.borderColor = 'rgba(212, 175, 55, 0.2)';
+                    messageBox.style.boxShadow = '0 35px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.08)';
+                    
+                    linexis.classList.add('fade-in');
+                    
+                    setTimeout(() => {
+                        linexis.classList.add('gold-glow');
+                    }, 300);
+                }, 500);
+            }, 3000);
+
+            // 3. Убираем LINEXIS, включаем финальное "presents"
+            setTimeout(() => {
+                linexis.classList.remove('fade-in');
+                linexis.classList.add('fade-out');
+
+                setTimeout(() => {
+                    // Возвращаем рамке нейтральный строгий вид
+                    messageBox.style.borderColor = 'rgba(255, 255, 255, 0.02)';
+                    
+                    presents.classList.add('fade-in');
+                }, 500);
+            }, 6000);
+
+            // 4. Уходим на основную страницу (main.html)
+            setTimeout(() => {
+                presents.classList.remove('fade-in');
+                presents.classList.add('fade-out');
+                
+                setTimeout(() => {
+                    window.location.href = 'main.html';
+                }, 600);
+            }, 8500);
+        });
+    </script>
+</body>
+</html>
